@@ -23,6 +23,11 @@ export default () => {
 	}, [rooms]);
 
 	const addOrEditRoom = (room) => {
+		const isDuplicateName = rooms.some((r) => r.tenPhong === room.tenPhong && r.id !== room.id);
+		if (isDuplicateName) {
+			throw new Error('Tên phòng đã tồn tại. Vui lòng chọn tên khác.');
+		}
+
 		if (room.id) {
 			setRooms(rooms.map((r) => (r.id === room.id ? room : r)));
 		} else {
@@ -31,6 +36,10 @@ export default () => {
 	};
 
 	const deleteRoom = (id) => {
+		const room = rooms.find((r) => r.id === id);
+		if (room && room.soChoNgoi >= 30) {
+			throw new Error('Không thể xóa phòng có từ 30 chỗ ngồi trở lên.');
+		}
 		setRooms(rooms.filter((r) => r.id !== id));
 	};
 
